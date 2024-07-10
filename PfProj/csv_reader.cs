@@ -4,6 +4,8 @@
  * Procedures:
  * csvReader - default constructor
  * ReadFile - populates two vectors using a .csv at filePath.
+ * getrm - self describing
+ * getmedv - self describing
  */
 using System;
 using System.IO;
@@ -12,7 +14,7 @@ using System.Collections.Generic;
 class read_csv
 {
 	private string filePath;
-	private string rm_in, medv_in;
+	private string rm_in, medv_in; // avg, median for linear regression modeling
 	private List<double> rm;
 	private List<double> medv;
 	
@@ -69,4 +71,7 @@ class read_csv
 				Console.WriteLine("Closing file");
                 reader.Close();
         }
+	
+	public List<double> getrm(){ return rm; }
+	public List<double> getmedv(){ return medv; }
     }
