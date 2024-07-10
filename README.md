@@ -1,4 +1,3 @@
 # ColtonTownsend
-# ( ͡° ͜ʖ ͡°)
 
 **Hello world**
