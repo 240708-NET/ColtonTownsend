@@ -1,3 +1,17 @@
+/* Filename: datamodeling.cs
+ * Author: Colton Townsend
+ * Date: Created 7/11/2024
+ * Procedures:
+ * main - Calls functions like printstats and covar.
+ * printstats - Aggregate procedure to call sumVector, meanVector, medianVector, and rangeVector.
+ * printVector - Debug procedure to print the whole vector.
+ * sumVector - Returns sum of a vector.
+ * meanVector - Returns mean of a vector.
+ * medianVector - Returns median of a vector.
+ * range - PRINTS range of a vector. (This is because range has a min and a max, I can't be bothered to make two seperate methods for now ¯\_(ツ)_/¯)
+ * covar - Returns covariance of two vectors.
+ * cor - Returns correlation of two vectors.
+ */
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.Contracts;
@@ -15,7 +29,7 @@ namespace PfProj
 			Console.WriteLine("Initialization complete");
 			Console.WriteLine("Input Filepath or blank for default: ");
 			string userInput = Console.ReadLine();
-			if (userInput == null)
+			if (userInput == null ||  userInput == "")
 				userInput = @"C:\Users\colto\Downloads\C++ Files\Boston.csv";
 			MyCsvReader.ReadFile(userInput,500); //MyCsvReader.ReadFile(@"C:\Users\colto\Downloads\C++ Files\Boston.csv",500);
 			Console.WriteLine("Number of records: " + MyCsvReader.getObservations());
