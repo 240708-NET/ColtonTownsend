@@ -12,7 +12,6 @@ namespace PfProj
 		{
 			Console.WriteLine("Initializing...");
 			Reader MyCsvReader = new Reader();
-			MyCsvReader.ReadFile(@"C:\Users\colto\Downloads\C++ Files\Boston.csv",500);
 			Console.WriteLine("Initialization complete");
 			Console.WriteLine("Input Filepath or blank for default: ");
 			string userInput = Console.ReadLine();
