@@ -12,11 +12,13 @@
  * covar - Returns covariance of two vectors.
  * cor - Returns correlation of two vectors.
  */
+ /*
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.Contracts;
 using System.Formats.Asn1;
 using System.Text.RegularExpressions;
+
 
 namespace PfProj
 {
@@ -114,3 +116,4 @@ namespace PfProj
 		}
 	}
 }
+*/

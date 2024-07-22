@@ -7,6 +7,7 @@
  * getrm - self describing
  * getmedv - self describing
  */
+ /*
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -66,3 +67,4 @@ namespace PfProj
 		public int getObservations(){return numObservations; }
 	}
 }
+*/
