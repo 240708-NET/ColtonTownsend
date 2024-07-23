@@ -5,6 +5,7 @@ using PfProj.Entities;
 
 public class UpdateRequest
 { 
-    [Required]
-    public string filePath { get; set; }
+    public required string FilePath { get; set; }
+    public string? ObservationLimit{ get; set; }
+    
 }

@@ -22,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     // configure DI for application services
-    services.AddScoped<IUserService, UserService>();
+    services.AddScoped<ISharedService, ModelService>();
 }
 
 var app = builder.Build();

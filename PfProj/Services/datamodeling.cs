@@ -12,7 +12,7 @@
  * covar - Returns covariance of two vectors.
  * cor - Returns correlation of two vectors.
  */
- /*
+ 
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics.Contracts;
@@ -20,11 +20,10 @@ using System.Formats.Asn1;
 using System.Text.RegularExpressions;
 
 
-namespace PfProj
-{
+namespace PfProj.Services;
 	class DataModeling
 	{
-		static void Main(string[] args)
+		/*static void Main(string[] args)
 		{
 			Console.WriteLine("Initializing...");
 			Reader MyCsvReader = new Reader();
@@ -43,8 +42,8 @@ namespace PfProj
 			Console.WriteLine("Correlation = " + cor(MyCsvReader.getrm(),MyCsvReader.getmedv()));
 			Console.WriteLine("Program terminated.");
 			return;
-		}
-		static void print_stats(List<double> target)
+		}*/
+		public void print_stats(List<double> target)
 		{
 			Console.WriteLine("Sum of vector: " + sumVector(target));
 			Console.WriteLine("Mean of vector: " + meanVector(target));
@@ -52,21 +51,21 @@ namespace PfProj
 			Console.WriteLine("Range of vector: ");
 			rangeVector(target);
 		}
-		static void printVector(List<double> target){
+		public void printVector(List<double> target){
 			Console.WriteLine("Printing vector: ");
 			for (int i = 0; i < target.Count(); i++)
 				Console.WriteLine(target[i]);
 		}
-		static double sumVector(List<double> target){
+		public double sumVector(List<double> target){
 			double sum = 0;
 			for (int i = 0; i < target.Count(); i++)
 				sum += target[i];
 				return sum;
 		}
-		static double meanVector(List<double> target){
+		public double meanVector(List<double> target){
 			return (sumVector(target)/target.Count());
-	}
-		static double medianVector(List<double> target){
+		}
+		public double medianVector(List<double> target){
 			if (target.Count() == 0)
 				return 0;
 			target.Sort();
@@ -75,7 +74,7 @@ namespace PfProj
 			else
 				return target[target.Count() / 2];
 		}
-		static void rangeVector(List<double> target){
+		public void rangeVector(List<double> target){
 			double max = Double.MinValue;
 			double min = Double.MaxValue;
 			for (int i = 0; i < target.Count(); i++)
@@ -86,7 +85,7 @@ namespace PfProj
 			Console.WriteLine("    Min: " + min);
 			Console.WriteLine("    Max: " + max);
 		}
-		static double covar(List<double> r, List<double> m){
+		public double covar(List<double> r, List<double> m){
 			if (r.Count() != m.Count()){
 				Console.WriteLine("Covariance matrix relies on the idea that each observation in rm corresponds to an observation in medv.\n Since the vectors are not of equal size, we cannot do a covariance matrix.");
 				return 0.0;
@@ -98,7 +97,7 @@ namespace PfProj
 				sum += (r[i]-rMean)*(m[i]-mMean);
 			return (sum/(r.Count()-1));
 		}
-		static double cor(List<double> r, List<double> m){
+		public double cor(List<double> r, List<double> m){
 			double sum = 0;
 			double rmSD, medvSD;
 			double rmMean = meanVector(r);
@@ -115,5 +114,3 @@ namespace PfProj
 			return (covar(r,m)/(rmSD*medvSD));
 		}
 	}
-}
-*/

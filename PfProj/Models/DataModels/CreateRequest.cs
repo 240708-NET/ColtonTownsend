@@ -5,6 +5,13 @@ using PfProj.Entities;
 
 public class CreateRequest
 {
-    [Required]
-    public string filePath { get; set; }
+    /* Update -> Create
+    public CreateRequest(string filePath, string? observationLimit)
+    {
+        FilePath = filePath;
+        if (observationLimit != null)
+            ObservationLimit = observationLimit;
+    } */
+    public required string FilePath { get; set; }
+    public string? ObservationLimit{ get; set; }
 }

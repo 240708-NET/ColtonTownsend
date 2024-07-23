@@ -1,12 +1,12 @@
 namespace PfProj.Services;
 
 using AutoMapper;
-using BCrypt.Net;
 using PfProj.Entities;
 using PfProj.Helpers;
 using PfProj.Models.DataModels;
+using Services;
 
-public interface IUserService
+public interface ISharedService
 {
     IEnumerable<DataModel> GetAll();
     DataModel GetById(int id);
@@ -15,12 +15,12 @@ public interface IUserService
     void Delete(int id);
 }
 
-public class UserService : IUserService
+public class ModelService : ISharedService
 {
     private DataContext _context;
     private readonly IMapper _mapper;
 
-    public UserService(
+    public ModelService(
         DataContext context,
         IMapper mapper)
     {
@@ -43,15 +43,43 @@ public class UserService : IUserService
         // map model to new object
         var target = _mapper.Map<DataModel>(model);
 
+        // generate reader and perform calculations
+        var reader = new Reader();
+        int observationLimit = 500;
+        //if (model.ObservationLimit != null)
+        //    observationLimit = (int) model.ObservationLimit;
+        reader.ReadFile(model.FilePath, observationLimit);
+        // fetch from reader
+        List<double> rm = reader.getrm();
+        List<double> medv = reader.getmedv();
+        // calculate variables
+        DataModeling calculator = new DataModeling();
+        target.Covar = calculator.covar(rm,medv);
+        target.Cor = calculator.cor(rm,medv);
+        target.NumObservations = reader.getObservations();
         // save
         _context.DataModels.Add(target);
         _context.SaveChanges();
     }
-
     public void Update(int id, UpdateRequest model)
     {
         var target = getModel(id);
-
+        
+        // generate reader and perform calculations
+        var reader = new Reader();
+        int observationLimit = 500;
+        //if (model.ObservationLimit != null)
+        //    observationLimit = (int) model.ObservationLimit;
+        reader.ReadFile(model.FilePath, observationLimit);
+        // fetch from reader
+        List<double> rm = reader.getrm();
+        List<double> medv = reader.getmedv();
+        // calculate variables
+        DataModeling calculator = new DataModeling();
+        target.Covar = calculator.covar(rm,medv);
+        target.Cor = calculator.cor(rm,medv);
+        target.NumObservations = reader.getObservations();
+        
         _mapper.Map(model, target);
         _context.DataModels.Update(target);
         _context.SaveChanges();

@@ -4,17 +4,18 @@ using System.Text.Json.Serialization;
 
 public class DataModel
 {
-    public string filePath;
-
+    public int Id { get; set; }
+    // Input
+    public required string FilePath { get; set; }
+    // Optional Input
+    public int? ObservationLimit { get; set; }
+    // Intermediate Variables
     [JsonIgnore]
-	public string rm_in { get; set; }
+	public List<double>? Rm { get; set; }
     [JsonIgnore]
-     public string medv_in { get; set; }
-     [JsonIgnore]
-	public List<double> rm { get; set; }
-    [JsonIgnore]
-	public List<double> medv { get; set; }
-
-    [JsonIgnore]
-	public int numObservations { get; set; }
+	public List<double>? Medv { get; set; }
+    // Output
+	public int? NumObservations { get; set; }
+    public double? Covar {get; set; }
+    public double? Cor {get; set; }
 }

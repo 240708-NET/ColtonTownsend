@@ -7,13 +7,13 @@
  * getrm - self describing
  * getmedv - self describing
  */
- /*
+ 
+
 using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace PfProj
-{
+namespace PfProj.Services;
 	public class Reader
 	{
 		private string filePath;
@@ -23,6 +23,9 @@ namespace PfProj
 		private int numObservations = 0;
 		
 		public Reader(){}
+		public Reader(string filepath){
+			filePath = filepath;
+		}
 		public void ReadFile(string fP, int observationLimit)
 		{
 			StreamReader reader;
@@ -66,5 +69,3 @@ namespace PfProj
 		public List<double> getmedv(){ return medv; }
 		public int getObservations(){return numObservations; }
 	}
-}
-*/
