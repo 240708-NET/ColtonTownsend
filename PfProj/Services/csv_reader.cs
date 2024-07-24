@@ -18,15 +18,13 @@ namespace PfProj.Services;
 	{
 		private string filePath;
 		private string rm_in, medv_in; // avg, median
-		private List<double> rm = new List<double>();
-		private List<double> medv = new List<double>();
+		private List<double> rm = new List<double>(); // test
+		private List<double> medv = new List<double>(); // target
 		private int numObservations = 0;
 		
 		public Reader(){}
-		public Reader(string filepath){
-			filePath = filepath;
-		}
-		public void ReadFile(string fP, int observationLimit)
+
+		public void ReadFile(string fP, int observationLimit, string testingName, string targetName)
 		{
 			StreamReader reader;
 			string line;
@@ -38,27 +36,44 @@ namespace PfProj.Services;
 				if (reader == null)
 				{
 					Console.WriteLine("Could not open file " + this.filePath);
+					reader.Close();
 					return; // stop further execution
 				}
 				Console.WriteLine("Reading line 1");
 				line = reader.ReadLine();
 				Console.WriteLine("Heading: " + line);
-				
+				// Expanded Functionality to Specify Columns
+				String[] ColumnNames = line.Split(',');
+				// snip off ""
+				for(int i = 0; i < ColumnNames.Length; i++)
+				{
+					ColumnNames[i] = ColumnNames[i].Trim().Substring(1,ColumnNames[i].Length-2);
+					//Console.WriteLine(ColumnNames[i].ToString()); // VERBOSE
+				}
+				// find index of test and target
+				int testingColIndex = Array.IndexOf(ColumnNames, testingName);
+				int targetColIndex = Array.IndexOf(ColumnNames, targetName);
+				if (testingColIndex == -1)
+					Console.WriteLine(testingName + " was not found in header");
+				if (targetColIndex == -1)
+					Console.WriteLine(targetName + " was not found in header");
+				if (testingColIndex == -1 || targetColIndex == -1)
+					return;
+				// read rows
 				while ((line = reader.ReadLine()) != null && (numObservations < observationLimit)){
-						var values = line.Split(',');
-						rm_in = values[0];
-						medv_in = values[1];
+					var values = line.Split(',');
+					rm_in = values[testingColIndex];
+					medv_in = values[targetColIndex];
+						
+					rm.Add(Convert.ToDouble(rm_in));
+					medv.Add(Convert.ToDouble(medv_in));
 
-						rm.Add(Convert.ToDouble(rm_in));
-						medv.Add(Convert.ToDouble(medv_in));
-
-						numObservations++;
-					}
-					
-				//Console.WriteLine("Length: " + rm.Count);
-				Console.WriteLine("Closing file");
-				reader.Close();
+					numObservations++;
+				}
+			Console.WriteLine("Closing file");
+			reader.Close();
 			}
+			//Console.WriteLine("Length: " + rm.Count);
 			catch (Exception e)
 			{
 				Console.WriteLine("Error: " + e.Message);

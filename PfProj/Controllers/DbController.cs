@@ -37,8 +37,10 @@ public class DataModelsController : ControllerBase
     [HttpPost]
     public IActionResult Create(CreateRequest model)
     {
-        _ModelService.Create(model);
-        return Ok(new { message = "Created Model" });
+        if (_ModelService.Create(model))
+            return Ok(new { message = "Created Model" });
+        else 
+            return Ok(new { message = "Client-side Error" });
     }
 
     [HttpPut("{id}")]

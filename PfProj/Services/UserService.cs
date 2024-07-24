@@ -10,7 +10,7 @@ public interface ISharedService
 {
     IEnumerable<DataModel> GetAll();
     DataModel GetById(int id);
-    void Create(CreateRequest model);
+    bool Create(CreateRequest model);
     void Update(int id, UpdateRequest model);
     void Delete(int id);
 }
@@ -38,47 +38,37 @@ public class ModelService : ISharedService
         return getModel(id);
     }
 
-    public void Create(CreateRequest model)
+    public bool Create(CreateRequest model)
     {
         // map model to new object
         var target = _mapper.Map<DataModel>(model);
 
-        // generate reader and perform calculations
+        // generate reader and read
         var reader = new Reader();
         int observationLimit = 500;
-        //if (model.ObservationLimit != null)
-        //    observationLimit = (int) model.ObservationLimit;
-        reader.ReadFile(model.FilePath, observationLimit);
+        if (target.ObservationLimit != null)
+            observationLimit = (int) target.ObservationLimit;
+        reader.ReadFile(target.FilePath, observationLimit, target.TestingColName, target.TargetColName);
         // fetch from reader
-        List<double> rm = reader.getrm();
-        List<double> medv = reader.getmedv();
+        List<double> TestingColName = reader.getrm(); // test;rm
+        List<double> TargetColName = reader.getmedv(); // target;medv
+        if (!TestingColName.Any() || !TargetColName.Any()){ // bad colnames or filename
+            Console.WriteLine("Bad ColName or FileName");
+            return false;
+        }
         // calculate variables
         DataModeling calculator = new DataModeling();
-        target.Covar = calculator.covar(rm,medv);
-        target.Cor = calculator.cor(rm,medv);
+        target.Covar = calculator.covar(TestingColName,TargetColName);
+        target.Cor = calculator.cor(TestingColName,TargetColName);
         target.NumObservations = reader.getObservations();
         // save
         _context.DataModels.Add(target);
         _context.SaveChanges();
+        return true;
     }
     public void Update(int id, UpdateRequest model)
     {
         var target = getModel(id);
-        
-        // generate reader and perform calculations
-        var reader = new Reader();
-        int observationLimit = 500;
-        //if (model.ObservationLimit != null)
-        //    observationLimit = (int) model.ObservationLimit;
-        reader.ReadFile(model.FilePath, observationLimit);
-        // fetch from reader
-        List<double> rm = reader.getrm();
-        List<double> medv = reader.getmedv();
-        // calculate variables
-        DataModeling calculator = new DataModeling();
-        target.Covar = calculator.covar(rm,medv);
-        target.Cor = calculator.cor(rm,medv);
-        target.NumObservations = reader.getObservations();
         
         _mapper.Map(model, target);
         _context.DataModels.Update(target);

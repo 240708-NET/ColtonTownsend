@@ -5,15 +5,12 @@ using System.Text.Json.Serialization;
 public class DataModel
 {
     public int Id { get; set; }
-    // Input
+    // Required Input
     public required string FilePath { get; set; }
+    public required string TestingColName { get; set; }
+	public required string TargetColName { get; set; }
     // Optional Input
     public int? ObservationLimit { get; set; }
-    // Intermediate Variables
-    [JsonIgnore]
-	public List<double>? Rm { get; set; }
-    [JsonIgnore]
-	public List<double>? Medv { get; set; }
     // Output
 	public int? NumObservations { get; set; }
     public double? Covar {get; set; }

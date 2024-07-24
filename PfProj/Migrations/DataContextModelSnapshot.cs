@@ -40,16 +40,18 @@ namespace PfProj.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Medv")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("NumObservations")
                         .HasColumnType("int");
 
                     b.Property<int?>("ObservationLimit")
                         .HasColumnType("int");
 
-                    b.Property<string>("Rm")
+                    b.Property<string>("TargetColName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TestingColName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
