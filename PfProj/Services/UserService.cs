@@ -11,7 +11,7 @@ public interface ISharedService
     IEnumerable<DataModel> GetAll();
     DataModel GetById(int id);
     bool Create(CreateRequest model);
-    void Update(int id, UpdateRequest model);
+    bool Update(int id, UpdateRequest model);
     void Delete(int id);
 }
 
@@ -45,6 +45,37 @@ public class ModelService : ISharedService
 
         // generate reader and read
         var reader = new Reader();
+        int observationLimit = int.MaxValue-1;
+        if (target.ObservationLimit != null)
+            observationLimit = (int) target.ObservationLimit;
+        reader.ReadFile(target.FilePath, observationLimit, target.TestingColName, target.TargetColName);
+        // fetch from reader
+        List<double> TestingColName = reader.getrm(); // test;rm
+        List<double> TargetColName = reader.getmedv(); // target;medv
+        if (!TestingColName.Any() || !TargetColName.Any()){ // bad colnames or filename
+            Console.WriteLine("Bad ColName or FileName");
+            return false;
+        }
+        // calculate variables
+        DataModeling calculator = new DataModeling();
+        target.Covar = calculator.covar(TestingColName,TargetColName);
+        target.Cor = calculator.cor(TestingColName,TargetColName);
+        target.NumObservations = reader.getObservations();
+        Console.WriteLine("Covariance: " + target.Covar);
+        Console.WriteLine("Correlation: " + target.Cor);
+        // create
+        _context.DataModels.Add(target);
+        _context.SaveChanges();
+        return true;
+    }
+    public bool Update(int id, UpdateRequest model)
+    {
+        var targetId = getModel(id);
+        //var target = _mapper.Map<DataModel>(model); 
+        var target = _mapper.Map(model, targetId);
+        
+        // generate reader and read
+        var reader = new Reader();
         int observationLimit = 500;
         if (target.ObservationLimit != null)
             observationLimit = (int) target.ObservationLimit;
@@ -61,18 +92,12 @@ public class ModelService : ISharedService
         target.Covar = calculator.covar(TestingColName,TargetColName);
         target.Cor = calculator.cor(TestingColName,TargetColName);
         target.NumObservations = reader.getObservations();
-        // save
-        _context.DataModels.Add(target);
+        Console.WriteLine("Covariance: " + target.Covar);
+        Console.WriteLine("Correlation: " + target.Cor);
+        // update
+        _context.DataModels.Update(targetId);
         _context.SaveChanges();
         return true;
-    }
-    public void Update(int id, UpdateRequest model)
-    {
-        var target = getModel(id);
-        
-        _mapper.Map(model, target);
-        _context.DataModels.Update(target);
-        _context.SaveChanges();
     }
 
     public void Delete(int id)
@@ -88,6 +113,7 @@ public class ModelService : ISharedService
     {
         var target = _context.DataModels.Find(id);
         if (target == null) throw new KeyNotFoundException("ID not found");
-        return target;
+            return target;
     }
+
 }

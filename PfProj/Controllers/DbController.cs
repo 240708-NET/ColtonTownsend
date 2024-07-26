@@ -46,8 +46,10 @@ public class DataModelsController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update(int id, UpdateRequest model)
     {
-        _ModelService.Update(id, model);
-        return Ok(new { message = "Updated" });
+        if (_ModelService.Update(id, model))
+            return Ok(new { message = "Updated" });
+        else 
+            return Ok(new { message = "Client-side Error" });
     }
 
     [HttpDelete("{id}")]

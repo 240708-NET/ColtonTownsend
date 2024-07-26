@@ -27,7 +27,7 @@ namespace PfProj.Services;
 		public void ReadFile(string fP, int observationLimit, string testingName, string targetName)
 		{
 			StreamReader reader;
-			string line;
+			string? line;
 			filePath = fP;
 			Console.WriteLine("Opening file " + this.filePath);
 			try
@@ -36,7 +36,6 @@ namespace PfProj.Services;
 				if (reader == null)
 				{
 					Console.WriteLine("Could not open file " + this.filePath);
-					reader.Close();
 					return; // stop further execution
 				}
 				Console.WriteLine("Reading line 1");
@@ -64,7 +63,7 @@ namespace PfProj.Services;
 					var values = line.Split(',');
 					rm_in = values[testingColIndex];
 					medv_in = values[targetColIndex];
-						
+
 					rm.Add(Convert.ToDouble(rm_in));
 					medv.Add(Convert.ToDouble(medv_in));
 
